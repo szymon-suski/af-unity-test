@@ -938,6 +938,7 @@ GameObject:
   m_Component:
   - component: {fileID: 278868168}
   - component: {fileID: 278868169}
+  - component: {fileID: 278868170}
   m_Layer: 0
   m_Name: Army1
   m_TagString: Untagged
@@ -989,6 +990,21 @@ MonoBehaviour:
   - {fileID: 154432830}
   - {fileID: 2019252931}
   - {fileID: 2145787374}
+--- !u!114 &278868170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278868167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3b18cd6576ff0a4f891131d8f4c33fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  creatorUnits: {fileID: 1714127504}
+  armyPositions: {fileID: 278868169}
+  unitsSO: {fileID: 11400000, guid: d0148e5063157834282b14a7f8377254, type: 2}
 --- !u!1 &291841574
 GameObject:
   m_ObjectHideFlags: 0
@@ -1213,10 +1229,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameModeType: 1
   unitsSO: {fileID: 11400000, guid: d0148e5063157834282b14a7f8377254, type: 2}
-  army1Pos: {fileID: 278868169}
-  army2Pos: {fileID: 1353391286}
+  army1: {fileID: 278868170}
+  army2: {fileID: 1353391287}
   creatorUnits: {fileID: 1714127504}
-  delayBetweenAttacks: 3
+  delayBetweenAttacks: 0.5
 --- !u!1 &726838010
 GameObject:
   m_ObjectHideFlags: 0
@@ -1950,6 +1966,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1353391285}
   - component: {fileID: 1353391286}
+  - component: {fileID: 1353391287}
   m_Layer: 0
   m_Name: Army2
   m_TagString: Untagged
@@ -2001,6 +2018,21 @@ MonoBehaviour:
   - {fileID: 679237153}
   - {fileID: 47124618}
   - {fileID: 16930117}
+--- !u!114 &1353391287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353391284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3b18cd6576ff0a4f891131d8f4c33fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  creatorUnits: {fileID: 1714127504}
+  armyPositions: {fileID: 1353391286}
+  unitsSO: {fileID: 11400000, guid: d0148e5063157834282b14a7f8377254, type: 2}
 --- !u!4 &1362504115 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6760591476060598716, guid: 70297e35c79c32843b2cbbda048d720c,

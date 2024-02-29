@@ -5,7 +5,7 @@ namespace AFSInterview.Army
 {
     public class PrioritizeMechanicalStrategy : UnitStrategy
     {
-        public Unit GetUnitToAttack(ArmyUnits enemyArmy)
+        public UnitPresenter GetUnitToAttack(ArmyUnits enemyArmy)
         {
             var enemy = enemyArmy.Army.Find(e => e.GetUnit().Attributes.Any(a => a == UnitAttributes.Mechanical));
             
@@ -14,7 +14,7 @@ namespace AFSInterview.Army
                 enemy = enemyArmy.Army[Random.Range(0, enemyArmy.Army.Count)];
             }
             
-            return enemy.GetUnit();
+            return enemy;
         }
     }
 }

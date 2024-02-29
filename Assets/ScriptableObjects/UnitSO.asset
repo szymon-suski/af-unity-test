@@ -18,19 +18,21 @@ MonoBehaviour:
     healthPoints: 100
     armorPoints: 20
     attackInterval: 1
-    attackDamage: 10
+    attackDamage: 25
     attackOverrides:
     - unitAttributes: 0
-      overrideDamage: 12
+      overrideDamage: 30
+    - unitAttributes: 2
+      overrideDamage: 30
   - unitType: 1
     attributes: 00000000
     healthPoints: 100
     armorPoints: 10
     attackInterval: 1
-    attackDamage: 15
+    attackDamage: 20
     attackOverrides:
     - unitAttributes: 2
-      overrideDamage: 20
+      overrideDamage: 50
   - unitType: 2
     attributes: 00000000
     healthPoints: 100
@@ -43,8 +45,8 @@ MonoBehaviour:
   - unitType: 3
     attributes: 02000000
     healthPoints: 200
-    armorPoints: 0
-    attackInterval: 4
+    armorPoints: 15
+    attackInterval: 5
     attackDamage: 60
     attackOverrides:
     - unitAttributes: 0
@@ -54,8 +56,8 @@ MonoBehaviour:
   - unitType: 4
     attributes: 0200000001000000
     healthPoints: 300
-    armorPoints: 30
-    attackInterval: 6
+    armorPoints: 25
+    attackInterval: 10
     attackDamage: 75
     attackOverrides:
     - unitAttributes: 2

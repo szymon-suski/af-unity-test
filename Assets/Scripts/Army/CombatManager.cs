@@ -12,10 +12,10 @@ namespace AFSInterview.Army
         private UnitsSO unitsSO;
 
         [SerializeField]
-        private ArmyPositions army1Pos;
+        private ArmyUnits army1;
 
         [SerializeField]
-        private ArmyPositions army2Pos;
+        private ArmyUnits army2;
 
         [SerializeField]
         private CreatorUnits creatorUnits;
@@ -24,12 +24,12 @@ namespace AFSInterview.Army
         private float delayBetweenAttacks = 3f;
 
         private bool gameStarted = false;
-        private ArmyUnits army1 = new ArmyUnits();
-        private ArmyUnits army2 = new ArmyUnits();
+        private bool army1Turn;
+        private Coroutine battelCoroutine;
 
         public override void DisableMode()
         {
-            
+
         }
 
         public override void EnableMode()
@@ -45,29 +45,88 @@ namespace AFSInterview.Army
 
         private void PrepareBatteField()
         {
-            army1 = CreateArmy(unitsSO.FirstArmy, army1Pos);
-            army2 = CreateArmy(unitsSO.SecondArmy, army2Pos);
+            army1.CreateArmy(unitsSO.FirstArmy);
+            army2.CreateArmy(unitsSO.SecondArmy);
+
+            // Randomize who starts
+            army1Turn = Random.Range(0, 100) >= 50;
+
+            battelCoroutine = StartCoroutine(Battle());
         }
 
-        private ArmyUnits CreateArmy(List<UnitTypeEnum> unitTypeEnum, ArmyPositions armyPos)
+        private IEnumerator Battle()
         {
-            var army = new ArmyUnits();
-
-            foreach (var unitType in unitTypeEnum)
+            if (army1Turn)
             {
-                var position = armyPos.GetNextPosition();
-                var unit = unitsSO.Units.Find(x => x.UnitType == unitType);
-                if(unit == null || position == null)
-                {
-                    Debug.LogError($"Couldn't find empty position or unit! On {gameObject.name}");
-                    break;
-                }
-
-                var inst = creatorUnits.CreateUnit(unit, position);
-                army.AddUnit(inst);
+                Attack(army1, army2);
             }
-            return army;
+            else
+            {
+                Attack(army2, army1);
+            }
+
+            yield return new WaitForSeconds(delayBetweenAttacks);
+
+            army1.UpdateAttackIntervalInArmy();
+            army2.UpdateAttackIntervalInArmy();
+            army1Turn = !army1Turn;
+
+            if (army1.IsDefeated())
+            {
+                Debug.Log($"{army2.name} WON!");
+                yield break;
+            }
+            else if (army2.IsDefeated())
+            {
+                Debug.Log($"{army1.name} WON!");
+                yield break;
+            }
+
+            battelCoroutine = StartCoroutine(Battle());
         }
 
+        private void Attack(ArmyUnits attackArmy, ArmyUnits targetArmy)
+        {
+            var attackUnitPresenter = attackArmy.GetAttackUnit();
+            if (attackUnitPresenter == null)
+            {
+                Debug.Log($"Any of units aren't available in {attackArmy.name}");
+                return;
+            }
+
+            var attackUnit = attackUnitPresenter.GetUnit();
+            var bestOpponent = attackUnit.GetBestUnitAttributeToAttack();
+
+            var strategyDefault = new DefaultStrategy();
+            UnitPresenter targetUnit = strategyDefault.GetUnitToAttack(targetArmy);
+
+            switch (bestOpponent)
+            {
+                case UnitAttributes.Light:
+                    var strategyLight = new PrioritizeLightStrategy();
+                    targetUnit = strategyLight.GetUnitToAttack(targetArmy);
+                    break;
+                case UnitAttributes.Armored:
+                    var strategyArmored = new PrioritizeArmoredStrategy();
+                    targetUnit = strategyArmored.GetUnitToAttack(targetArmy);
+                    break;
+                case UnitAttributes.Mechanical:
+                    var strategyMechanical = new PrioritizeMechanicalStrategy();
+                    targetUnit = strategyMechanical.GetUnitToAttack(targetArmy);
+                    break;
+            }
+
+            var attackDamage = attackUnit.GetAttackDamage(targetUnit.GetUnit());
+            var damageDeal = Mathf.Max(1, attackDamage - targetUnit.GetUnit().ArmorPoints);
+
+            Debug.Log($"Unit from {attackArmy.name} of type {attackUnit.UnitType} attacks unit of army {targetArmy.name} of type {targetUnit.GetUnit().UnitType} and deal {damageDeal} pts damage");
+
+            if (targetUnit.GetUnit().ReceiveDamage(damageDeal))
+            {
+                targetArmy.RemoveUnit(targetUnit);
+                targetUnit.DestroyUnit();
+                Debug.Log($"Unit from {targetArmy.name} of type {targetUnit.GetUnit().UnitType} dies");
+            }
+        }
     }
 }

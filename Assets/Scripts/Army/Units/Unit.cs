@@ -6,10 +6,11 @@ using UnityEngine;
 namespace AFSInterview.Army
 {
     public enum UnitAttributes
-    { 
+    {
         Light,
         Armored,
-        Mechanical
+        Mechanical,
+        None
     }
 
     [Serializable]
@@ -34,7 +35,7 @@ namespace AFSInterview.Army
         private float healthPoints;
         public float HealthPoints => healthPoints;
 
-        [SerializeField] 
+        [SerializeField]
         private float armorPoints;
         public float ArmorPoints => armorPoints;
 
@@ -51,6 +52,18 @@ namespace AFSInterview.Army
         public List<AttackDamageOverride> AttackDamageOverrides => attackOverrides;
 
         protected int currentAttackInterval = 0;
+
+        public Unit(UnitTypeEnum unitType, List<UnitAttributes> attributes, float healthPoints, float armorPoints, int attackInterval, float attackDamage, List<AttackDamageOverride> attackOverrides)
+        {
+            this.unitType = unitType;
+            this.attributes = attributes;
+            this.healthPoints = healthPoints;
+            this.armorPoints = armorPoints;
+            this.attackInterval = attackInterval;
+            this.attackDamage = attackDamage;
+            this.attackOverrides = attackOverrides;
+            this.currentAttackInterval = 0;
+        }
 
         public float GetAttackDamage(Unit target)
         {
@@ -70,7 +83,7 @@ namespace AFSInterview.Army
             return damage;
         }
 
-        public virtual bool ReceiveDamage(float  damage) 
+        public virtual bool ReceiveDamage(float damage)
         {
             healthPoints = Mathf.Max(0, healthPoints - damage);
             return healthPoints - damage <= 0;
@@ -87,6 +100,16 @@ namespace AFSInterview.Army
         public bool CanAttack()
         {
             return currentAttackInterval == 0;
+        }
+
+        public UnitAttributes GetBestUnitAttributeToAttack()
+        {
+            var attackOver = attackOverrides.OrderByDescending(x => x.overrideDamage).FirstOrDefault();
+            if (attackOver == null)
+            {
+                return UnitAttributes.None;
+            }
+            return attackOver.unitAttributes;
         }
     }
 }

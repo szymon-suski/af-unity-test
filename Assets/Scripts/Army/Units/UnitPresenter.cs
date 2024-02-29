@@ -9,7 +9,7 @@ namespace AFSInterview.Army
 
         public void SetUnit(Unit unit)
         {
-            this.unit = unit;
+            this.unit = new Unit(unit.UnitType, unit.Attributes, unit.HealthPoints, unit.ArmorPoints, unit.AttackInterval, unit.AttackDamage, unit.AttackDamageOverrides);
         }
 
         public Unit GetUnit()
