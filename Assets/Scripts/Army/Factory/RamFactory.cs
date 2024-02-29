@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AFSInterview.Army
 {
-    public class RamFactory : FactoryUnit<RamUnitPresenter>
+    public class RamFactory : FactoryUnit
     {
     }
 }

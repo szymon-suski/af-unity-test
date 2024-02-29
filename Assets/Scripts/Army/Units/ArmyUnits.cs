@@ -6,15 +6,15 @@ namespace AFSInterview.Army
     public class ArmyUnits : MonoBehaviour
     {
         [SerializeField]
-        private List<Unit> army;
-        public List<Unit> Army => army;
+        private List<UnitPresenter> army = new List<UnitPresenter>();
+        public List<UnitPresenter> Army => army;
 
-        public void AddUnit(Unit unit)
+        public void AddUnit(UnitPresenter unit)
         {
             army.Add(unit);
         }
 
-        public void RemoveUnit(Unit unit)
+        public void RemoveUnit(UnitPresenter unit)
         {
             army.Remove(unit);
         }

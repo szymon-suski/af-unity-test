@@ -12,6 +12,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db004d76fbcdb3949ab2787af44c3d4a, type: 3}
   m_Name: UnitSO
   m_EditorClassIdentifier: 
-  units: []
-  firstArmy: 00000000000000000100000003000000
-  secondArmy: 
+  units:
+  - unitType: 0
+    attributes: 01000000
+    healthPoints: 100
+    armorPoints: 20
+    attackInterval: 1
+    attackDamage: 10
+    attackOverrides:
+    - unitAttributes: 0
+      overrideDamage: 12
+  - unitType: 1
+    attributes: 00000000
+    healthPoints: 100
+    armorPoints: 10
+    attackInterval: 1
+    attackDamage: 15
+    attackOverrides:
+    - unitAttributes: 2
+      overrideDamage: 20
+  - unitType: 2
+    attributes: 00000000
+    healthPoints: 100
+    armorPoints: 5
+    attackInterval: 3
+    attackDamage: 30
+    attackOverrides:
+    - unitAttributes: 1
+      overrideDamage: 40
+  - unitType: 3
+    attributes: 02000000
+    healthPoints: 200
+    armorPoints: 0
+    attackInterval: 4
+    attackDamage: 60
+    attackOverrides:
+    - unitAttributes: 0
+      overrideDamage: 70
+    - unitAttributes: 2
+      overrideDamage: 100
+  - unitType: 4
+    attributes: 0200000001000000
+    healthPoints: 300
+    armorPoints: 30
+    attackInterval: 6
+    attackDamage: 75
+    attackOverrides:
+    - unitAttributes: 2
+      overrideDamage: 80
+  firstArmy: 00000000000000000200000004000000
+  secondArmy: 0100000001000000010000000300000004000000

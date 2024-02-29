@@ -14,8 +14,10 @@ namespace AFSInterview.Army
         [Header("Army Settings")]
         [SerializeField]
         private List<UnitTypeEnum> firstArmy;
+        public List<UnitTypeEnum> FirstArmy => firstArmy;
 
         [SerializeField]
         private List<UnitTypeEnum> secondArmy;
+        public List<UnitTypeEnum> SecondArmy => secondArmy;
     }
 }

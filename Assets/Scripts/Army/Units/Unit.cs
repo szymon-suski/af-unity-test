@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AFSInterview.Army
@@ -51,13 +52,27 @@ namespace AFSInterview.Army
 
         protected int currentAttackInterval = 0;
 
-        public virtual void Attack(Unit target)
+        public float GetAttackDamage(Unit target)
         {
             currentAttackInterval = attackInterval;
+
+            var damage = attackDamage;
+
+            var attackOverride = attackOverrides.Where(x => target.Attributes
+                                                .Contains(x.unitAttributes))
+                                                .OrderByDescending(x => x.overrideDamage)
+                                                .FirstOrDefault();
+            if (attackOverride != null)
+            {
+                damage = attackOverride.overrideDamage;
+            }
+
+            return damage;
         }
 
         public virtual bool ReceiveDamage(float  damage) 
         {
+            healthPoints = Mathf.Max(0, healthPoints - damage);
             return healthPoints - damage <= 0;
         }
 
@@ -67,6 +82,11 @@ namespace AFSInterview.Army
             {
                 currentAttackInterval--;
             }
+        }
+
+        public bool CanAttack()
+        {
+            return currentAttackInterval == 0;
         }
     }
 }

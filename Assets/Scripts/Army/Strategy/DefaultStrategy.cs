@@ -6,7 +6,7 @@ namespace AFSInterview.Army
     {
         public Unit GetUnitToAttack(ArmyUnits enemyArmy)
         {
-            return enemyArmy.Army[Random.Range(0, enemyArmy.Army.Count)];
+            return enemyArmy.Army[Random.Range(0, enemyArmy.Army.Count)].GetUnit();
         }
     }
 }

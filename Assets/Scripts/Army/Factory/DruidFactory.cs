@@ -5,8 +5,7 @@ using UnityEngine;
 
 namespace AFSInterview.Army
 {
-    public class DruidFactory : FactoryUnit<DruidUnitPresenter>
+    public class DruidFactory : FactoryUnit
     {
-
     }
 }

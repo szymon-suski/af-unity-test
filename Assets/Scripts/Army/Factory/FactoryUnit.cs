@@ -2,20 +2,19 @@ using UnityEngine;
 
 namespace AFSInterview.Army
 {
-    public class FactoryUnit<T> : MonoBehaviour where T : UnitPresenter
+    public class FactoryUnit : MonoBehaviour
     {
         [SerializeField]
-        protected T prefab;
+        protected UnitTypeEnum unitType;
+        public UnitTypeEnum UnitType => unitType;
 
-        public virtual T CreateInstance()
+        [SerializeField]
+        protected UnitPresenter prefab;
+
+        public virtual UnitPresenter CreateInstance(Transform parent)
         {
-            var inst = Instantiate(prefab, GetParent());
+            var inst = Instantiate(prefab, parent);
             return inst;
-        }
-
-        protected virtual Transform GetParent()
-        {
-            return transform;
         }
     }
 }

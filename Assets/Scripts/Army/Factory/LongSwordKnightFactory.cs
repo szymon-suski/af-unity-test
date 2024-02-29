@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AFSInterview.Army
 {
-    public class LongSwordKnightFactory : FactoryUnit<LongSwordKnightUnitPresenter>
+    public class LongSwordKnightFactory : FactoryUnit
     {
     }
 }
