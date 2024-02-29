@@ -22,8 +22,8 @@ namespace AFSInterview.Army
     public class Unit
     {
         [SerializeField]
-        private string unitName;
-        public string UnitName => unitName;
+        private UnitTypeEnum unitType;
+        public UnitTypeEnum UnitType => unitType;
 
         [SerializeField]
         private List<UnitAttributes> attributes;

@@ -1,12 +1,12 @@
-using System;
+using AFSInterview.Army;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AFSInterview.Army
 {
-    [Serializable]
-    public class CatapultUnit : Unit
+    public class CatapultFactory : FactoryUnit<CatapultUnitPresenter>
     {
+
     }
 }

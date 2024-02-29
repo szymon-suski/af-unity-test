@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AFSInterview.Army
@@ -7,23 +8,14 @@ namespace AFSInterview.Army
     {
         [Header("Units Settings")]
         [SerializeField]
-        private LongSwordKnightUnit longSwordKnightUnit;
-        public LongSwordKnightUnit LongSwordKnightUnit => longSwordKnightUnit;
+        private List<Unit> units;
+        public List<Unit> Units => units;
+        
+        [Header("Army Settings")]
+        [SerializeField]
+        private List<UnitTypeEnum> firstArmy;
 
         [SerializeField]
-        private ArcherUnit archerUnit;
-        public ArcherUnit ArcherUnit => archerUnit;
-
-        [SerializeField]
-        private CatapultUnit catapultUnit;
-        public CatapultUnit CatapultUnit => catapultUnit;
-
-        [SerializeField]
-        private DruidUnit druidUnit;
-        public DruidUnit DruidUnit => druidUnit;
-
-        [SerializeField]
-        private RamUnit ramUnit;
-        public RamUnit RamUnit => ramUnit;
+        private List<UnitTypeEnum> secondArmy;
     }
 }

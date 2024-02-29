@@ -5,8 +5,7 @@ using UnityEngine;
 
 namespace AFSInterview.Army
 {
-    [Serializable]
-    public class RamUnit : Unit
+    public class LongSwordKnightUnitPresenter : UnitPresenter
     {
     }
 }

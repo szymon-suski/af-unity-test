@@ -12,9 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db004d76fbcdb3949ab2787af44c3d4a, type: 3}
   m_Name: UnitSO
   m_EditorClassIdentifier: 
-  unit:
-    attributes: 
-    healthPoints: 0
-    armorPoints: 0
-    attackInterval: 0
-    attackDamage: 0
+  units: []
+  firstArmy: 00000000000000000100000003000000
+  secondArmy: 
