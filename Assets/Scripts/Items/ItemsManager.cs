@@ -1,20 +1,31 @@
 ﻿namespace AFSInterview.Items
 {
-	using TMPro;
 	using UnityEngine;
 
 	public class ItemsManager : MonoBehaviour
 	{
+		[Header("Settings")]
+        [SerializeField] private int itemSellMaxValue;
+        [SerializeField] private float itemSpawnInterval;
+
+        [Header("References")]
 		[SerializeField] private InventoryController inventoryController;
-		[SerializeField] private int itemSellMaxValue;
 		[SerializeField] private Transform itemSpawnParent;
 		[SerializeField] private GameObject itemPrefab;
 		[SerializeField] private BoxCollider itemSpawnArea;
-		[SerializeField] private float itemSpawnInterval;
+		[SerializeField] private Camera raycastCamera;
+
+		private int ItemsCount => inventoryController.ItemsCount;
 
 		private float nextItemSpawnTime;
-		
-		private void Update()
+		private int itemLayerMaskId;
+
+        private void Start()
+        {
+            itemLayerMaskId = LayerMask.GetMask("Item");
+        }
+
+        private void Update()
 		{
 			if (Time.time >= nextItemSpawnTime)
 				SpawnNewItem();
@@ -24,8 +35,6 @@
 			
 			if (Input.GetKeyDown(KeyCode.Space))
 				inventoryController.SellAllItemsUpToValue(itemSellMaxValue);
-
-			FindObjectOfType<TextMeshProUGUI>().text = "Money: " + inventoryController.Money;
 		}
 
 		private void SpawnNewItem()
@@ -44,14 +53,15 @@
 
 		private void TryPickUpItem()
 		{
-			var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			var layerMask = LayerMask.GetMask("Item");
-			if (!Physics.Raycast(ray, out var hit, 100f, layerMask) || !hit.collider.TryGetComponent<IItemHolder>(out var itemHolder))
+			var ray = raycastCamera.ScreenPointToRay(Input.mousePosition);
+			
+			if (!Physics.Raycast(ray, out var hit, 100f, itemLayerMaskId) || !hit.collider.TryGetComponent<IItemHolder>(out var itemHolder))
 				return;
 			
 			var item = itemHolder.GetItem(true);
             inventoryController.AddItem(item);
-            Debug.Log("Picked up " + item.Name + " with value of " + item.Value + " and now have " + inventoryController.ItemsCount + " items");
+
+            Debug.Log("Picked up " + item.Name + " with value of " + item.Value + " and now have " + ItemsCount + " items");
 		}
 	}
 }
