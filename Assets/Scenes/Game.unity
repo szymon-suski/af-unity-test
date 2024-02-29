@@ -490,10 +490,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemSellMaxValue: 150
   itemSpawnInterval: 2.5
+  itemsPrefabs:
+  - {fileID: 1329781387587706877, guid: 196a3a9d3e43e7b4083dc9d20000e5bf, type: 3}
+  - {fileID: 1329781387587706877, guid: 1202ced6a35b14942a0fdce33a715e46, type: 3}
+  - {fileID: 1329781387587706877, guid: 70297e35c79c32843b2cbbda048d720c, type: 3}
   inventoryController: {fileID: 117262}
   itemSpawnParent: {fileID: 246465938}
-  itemPrefab: {fileID: 1329781387587706877, guid: 70297e35c79c32843b2cbbda048d720c,
-    type: 3}
   itemSpawnArea: {fileID: 1201324633}
   raycastCamera: {fileID: 884237431}
 --- !u!1 &246465937
