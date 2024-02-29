@@ -44,6 +44,12 @@
 			items.Add(item);
 		}
 
+		public void AddMoney(int moneyToAdd)
+		{
+			money += moneyToAdd;
+			UpdateMoneyText();
+		}
+
 		private void UpdateMoneyText()
 		{
             moneyText.text = "Money: " + money;

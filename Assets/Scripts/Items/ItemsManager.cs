@@ -1,21 +1,20 @@
 ﻿namespace AFSInterview.Items
 {
-	using UnityEngine;
+    using System.Collections.Generic;
+    using UnityEngine;
 
 	public class ItemsManager : MonoBehaviour
 	{
 		[Header("Settings")]
         [SerializeField] private int itemSellMaxValue;
         [SerializeField] private float itemSpawnInterval;
+		[SerializeField] private List<GameObject> itemsPrefabs;
 
         [Header("References")]
 		[SerializeField] private InventoryController inventoryController;
 		[SerializeField] private Transform itemSpawnParent;
-		[SerializeField] private GameObject itemPrefab;
 		[SerializeField] private BoxCollider itemSpawnArea;
 		[SerializeField] private Camera raycastCamera;
-
-		private int ItemsCount => inventoryController.ItemsCount;
 
 		private float nextItemSpawnTime;
 		private int itemLayerMaskId;
@@ -27,7 +26,7 @@
 
         private void Update()
 		{
-			if (Time.time >= nextItemSpawnTime)
+			if (Time.time >= nextItemSpawnTime && itemsPrefabs.Count > 0)
 				SpawnNewItem();
 			
 			if (Input.GetMouseButtonDown(0))
@@ -47,8 +46,10 @@
 				0f,
 				Random.Range(spawnAreaBounds.min.z, spawnAreaBounds.max.z)
 			);
-			
-			Instantiate(itemPrefab, position, Quaternion.identity, itemSpawnParent);
+
+			var prefab = itemsPrefabs[Random.Range(0, itemsPrefabs.Count)];
+
+            Instantiate(prefab, position, Quaternion.identity, itemSpawnParent);
 		}
 
 		private void TryPickUpItem()
@@ -59,9 +60,7 @@
 				return;
 			
 			var item = itemHolder.GetItem(true);
-            inventoryController.AddItem(item);
-
-            Debug.Log("Picked up " + item.Name + " with value of " + item.Value + " and now have " + ItemsCount + " items");
+			item.Use(inventoryController);
 		}
 	}
 }
