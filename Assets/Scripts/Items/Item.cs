@@ -2,12 +2,13 @@
 {
 	using System;
 	using UnityEngine;
+    using static UnityEditor.Progress;
 
 	[Serializable]
 	public class Item
 	{
-		[SerializeField] private string name;
-		[SerializeField] private int value;
+		[SerializeField] protected string name;
+		[SerializeField] protected int value;
 
 		public string Name => name;
 		public int Value => value;
@@ -18,9 +19,10 @@
 			this.value = value;
 		}
 
-		public void Use()
+		public virtual void Use(InventoryController inventoryController)
 		{
-			Debug.Log("Using" + Name);
-		}
+            inventoryController.AddItem(this);
+            Debug.Log("Picked up " + name + " with value of " + value + " and now have " + inventoryController.ItemsCount + " items");
+        }
 	}
 }

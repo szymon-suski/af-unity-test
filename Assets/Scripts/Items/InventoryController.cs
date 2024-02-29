@@ -1,19 +1,30 @@
 ﻿namespace AFSInterview.Items
 {
 	using System.Collections.Generic;
-	using UnityEngine;
+    using TMPro;
+    using UnityEngine;
 
 	public class InventoryController : MonoBehaviour
 	{
+		[Header("Settings")]
 		[SerializeField] private List<Item> items;
 		[SerializeField] private int money;
 
-		public int Money => money;
+		[Header("Reference")]
+		[SerializeField] private TextMeshProUGUI moneyText;
+
 		public int ItemsCount => items.Count;
 
-		public void SellAllItemsUpToValue(int maxValue)
+        private void Start()
+        {
+			UpdateMoneyText();
+        }
+
+        public void SellAllItemsUpToValue(int maxValue)
 		{
-			for (var i = 0; i < items.Count; i++)
+			var orgMoney = money;
+
+			for (var i = items.Count - 1; i >= 0; i--)
 			{
 				var itemValue = items[i].Value;
 				if (itemValue > maxValue)
@@ -22,11 +33,26 @@
 				money += itemValue;
 				items.RemoveAt(i);
 			}
-		}
+
+			// Update money text only if money changed.
+			if (orgMoney == money) return;
+            UpdateMoneyText();
+        }
 
 		public void AddItem(Item item)
 		{
 			items.Add(item);
 		}
+
+		public void AddMoney(int moneyToAdd)
+		{
+			money += moneyToAdd;
+			UpdateMoneyText();
+		}
+
+		private void UpdateMoneyText()
+		{
+            moneyText.text = "Money: " + money;
+        }
 	}
 }
