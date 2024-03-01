@@ -50,6 +50,11 @@
 			UpdateMoneyText();
 		}
 
+		public void ChangeStateOfText(bool enable)
+		{
+			moneyText.gameObject.SetActive(enable);
+		}
+
 		private void UpdateMoneyText()
 		{
             moneyText.text = "Money: " + money;

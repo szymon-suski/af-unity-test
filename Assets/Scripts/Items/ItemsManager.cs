@@ -1,9 +1,10 @@
 ﻿namespace AFSInterview.Items
 {
+    using AFSInterview.GameMode;
     using System.Collections.Generic;
     using UnityEngine;
 
-	public class ItemsManager : MonoBehaviour
+	public class ItemsManager : GameMode
 	{
 		[Header("Settings")]
         [SerializeField] private int itemSellMaxValue;
@@ -18,6 +19,10 @@
 
 		private float nextItemSpawnTime;
 		private int itemLayerMaskId;
+		private bool activeMode = false;
+		private GameModeType gameMode = GameModeType.Items;
+
+        public GameModeType GameMode { get => gameMode; }
 
         private void Start()
         {
@@ -26,14 +31,22 @@
 
         private void Update()
 		{
+			if (!activeMode) return;
+
 			if (Time.time >= nextItemSpawnTime && itemsPrefabs.Count > 0)
-				SpawnNewItem();
+			{
+                SpawnNewItem();
+            }
 			
 			if (Input.GetMouseButtonDown(0))
-				TryPickUpItem();
-			
+			{
+                TryPickUpItem();
+            }
+
 			if (Input.GetKeyDown(KeyCode.Space))
-				inventoryController.SellAllItemsUpToValue(itemSellMaxValue);
+			{
+                inventoryController.SellAllItemsUpToValue(itemSellMaxValue);
+            }
 		}
 
 		private void SpawnNewItem()
@@ -62,5 +75,19 @@
 			var item = itemHolder.GetItem(true);
 			item.Use(inventoryController);
 		}
-	}
+
+        public override void EnableMode()
+        {
+            itemSpawnParent.gameObject.SetActive(true);
+			inventoryController.ChangeStateOfText(true);
+            activeMode = true;
+        }
+
+        public override void DisableMode()
+        {
+            activeMode = false;
+            itemSpawnParent.gameObject.SetActive(false);
+            inventoryController.ChangeStateOfText(false);
+        }
+    }
 }
