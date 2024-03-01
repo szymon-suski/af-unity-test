@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace AFSInterview.Army
 {
+    /// <summary>
+    /// Scriptable object that contains all units and army settings.
+    /// </summary>
     [CreateAssetMenu(fileName = "UnitSO", menuName = "Army/Units")]
     public class UnitsSO : ScriptableObject
     {

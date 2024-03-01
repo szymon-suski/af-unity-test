@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace AFSInterview.Army
 {
+    /// <summary>
+    /// Class that holds connection between UnitAttributes and overrideDamage.
+    /// </summary>
     [Serializable]
     public class AttackDamageOverride
     {
@@ -12,6 +15,9 @@ namespace AFSInterview.Army
         public float overrideDamage;
     }
 
+    /// <summary>
+    /// Base unit class that specify all unit settings.
+    /// </summary>
     [Serializable]
     public class Unit
     {
@@ -69,17 +75,29 @@ namespace AFSInterview.Army
             this.currentAttackInterval = 0;
         }
 
+        /// <summary>
+        /// Set behavior strategy for this unit.
+        /// </summary>
+        /// <param name="unitStrategy"></param>
         public void SetStrategy(IUnitStrategy unitStrategy)
         {
             strategy = unitStrategy;
         }
 
+        /// <summary>
+        /// Calculate damage that will deal this unit to target unit.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public float GetAttackDamage(Unit target)
         {
+            // Sets attack interval so unit can attack only on currentAttackInterval is 0.
             currentAttackInterval = attackInterval;
-
+             
+            // Base damage
             var damage = attackDamage;
 
+            // Try to find override attack damage.
             var attackOverride = attackOverrides.Where(x => target.Attributes
                                                 .Contains(x.unitAttributes))
                                                 .OrderByDescending(x => x.overrideDamage)
@@ -92,12 +110,20 @@ namespace AFSInterview.Army
             return damage;
         }
 
+        /// <summary>
+        /// Remove damage points from health points.
+        /// </summary>
+        /// <param name="damage"></param>
+        /// <returns>True if unit has 0 health points and false if not.</returns>
         public virtual bool ReceiveDamage(float damage)
         {
             healthPoints = Mathf.Max(0, healthPoints - damage);
             return healthPoints - damage <= 0;
         }
 
+        /// <summary>
+        /// Update attack interval for next turn.
+        /// </summary>
         public virtual void UpdateAttackInterval()
         {
             if (currentAttackInterval > 0)
@@ -106,6 +132,10 @@ namespace AFSInterview.Army
             }
         }
 
+        /// <summary>
+        /// Returns if unit can attack in this turn.
+        /// </summary>
+        /// <returns></returns>
         public bool CanAttack()
         {
             return currentAttackInterval == 0;

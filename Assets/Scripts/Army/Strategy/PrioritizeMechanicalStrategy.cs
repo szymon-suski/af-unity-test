@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace AFSInterview.Army
 {
+    /// <summary>
+    /// Strategy class that returns mechanical unit from enemy army.
+    /// In case of not existing return random unit.
+    /// </summary>
     public class PrioritizeMechanicalStrategy : IUnitStrategy
     {
         public UnitPresenter GetUnitToAttack(ArmyUnits enemyArmy)
