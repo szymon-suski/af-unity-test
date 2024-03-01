@@ -17,7 +17,7 @@ namespace AFSInterview.Army
         private List<UnitPresenter> army;
         public List<UnitPresenter> Army => army;
 
-        public void CreateArmy(List<UnitTypeEnum> unitTypeEnum)
+        public void CreateArmy(List<UnitTypeEnum> unitTypeEnum, bool isInArmy1)
         {
             army = new List<UnitPresenter>();
 
@@ -31,7 +31,7 @@ namespace AFSInterview.Army
                     break;
                 }
 
-                var inst = creatorUnits.CreateUnit(unit, position);
+                var inst = creatorUnits.CreateUnit(unit, position, isInArmy1);
                 army.Add(inst);
             }
         }
@@ -58,6 +58,16 @@ namespace AFSInterview.Army
             {
                 unit.GetUnit().UpdateAttackInterval();
             }
+        }
+
+        public void ClearArmy()
+        {
+            if (army.Count < 1) return;
+            foreach (var unit in army)
+            {
+                unit.DestroyUnit();
+            }
+            army.Clear();
         }
     }
 }

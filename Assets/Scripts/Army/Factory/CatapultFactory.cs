@@ -1,11 +1,6 @@
-using AFSInterview.Army;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace AFSInterview.Army
 {
-    public class CatapultFactory : FactoryUnit
+    public class CatapultFactory : FactoryUnit<UnitPresenter>
     {
     }
 }

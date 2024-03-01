@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace AFSInterview.Army
 {
-    public class LongSwordKnightFactory : FactoryUnit
+    public class LongSwordKnightFactory : FactoryUnit<UnitPresenter>
     {
     }
 }

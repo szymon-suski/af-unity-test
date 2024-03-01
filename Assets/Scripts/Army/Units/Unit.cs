@@ -5,18 +5,10 @@ using UnityEngine;
 
 namespace AFSInterview.Army
 {
-    public enum UnitAttributes
-    {
-        Light,
-        Armored,
-        Mechanical,
-        None
-    }
-
     [Serializable]
     public class AttackDamageOverride
     {
-        public UnitAttributes unitAttributes;
+        public UnitAttributesEnum unitAttributes;
         public float overrideDamage;
     }
 
@@ -28,8 +20,8 @@ namespace AFSInterview.Army
         public UnitTypeEnum UnitType => unitType;
 
         [SerializeField]
-        private List<UnitAttributes> attributes;
-        public List<UnitAttributes> Attributes => attributes;
+        private List<UnitAttributesEnum> attributes;
+        public List<UnitAttributesEnum> Attributes => attributes;
 
         [SerializeField]
         private float healthPoints;
@@ -51,9 +43,19 @@ namespace AFSInterview.Army
         private List<AttackDamageOverride> attackOverrides;
         public List<AttackDamageOverride> AttackDamageOverrides => attackOverrides;
 
+        [SerializeField]
+        private UnitStrategyEnum unitStrategy;
+        public UnitStrategyEnum UnitStrategyEnum => unitStrategy;
+
+        protected IUnitStrategy strategy;
+        public IUnitStrategy Strategy => strategy;
+
+        protected bool isInArmy1;
+        public bool IsInArmy1 => isInArmy1;
+
         protected int currentAttackInterval = 0;
 
-        public Unit(UnitTypeEnum unitType, List<UnitAttributes> attributes, float healthPoints, float armorPoints, int attackInterval, float attackDamage, List<AttackDamageOverride> attackOverrides)
+        public Unit(UnitTypeEnum unitType, List<UnitAttributesEnum> attributes, float healthPoints, float armorPoints, int attackInterval, float attackDamage, List<AttackDamageOverride> attackOverrides, UnitStrategyEnum unitStrategy, bool isInArmy1)
         {
             this.unitType = unitType;
             this.attributes = attributes;
@@ -62,7 +64,14 @@ namespace AFSInterview.Army
             this.attackInterval = attackInterval;
             this.attackDamage = attackDamage;
             this.attackOverrides = attackOverrides;
+            this.unitStrategy = unitStrategy;
+            this.isInArmy1 = isInArmy1;
             this.currentAttackInterval = 0;
+        }
+
+        public void SetStrategy(IUnitStrategy unitStrategy)
+        {
+            strategy = unitStrategy;
         }
 
         public float GetAttackDamage(Unit target)
@@ -100,16 +109,6 @@ namespace AFSInterview.Army
         public bool CanAttack()
         {
             return currentAttackInterval == 0;
-        }
-
-        public UnitAttributes GetBestUnitAttributeToAttack()
-        {
-            var attackOver = attackOverrides.OrderByDescending(x => x.overrideDamage).FirstOrDefault();
-            if (attackOver == null)
-            {
-                return UnitAttributes.None;
-            }
-            return attackOver.unitAttributes;
         }
     }
 }

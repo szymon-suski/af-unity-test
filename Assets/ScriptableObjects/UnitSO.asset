@@ -24,15 +24,17 @@ MonoBehaviour:
       overrideDamage: 30
     - unitAttributes: 2
       overrideDamage: 30
+    unitStrategy: 0
   - unitType: 1
     attributes: 00000000
     healthPoints: 100
     armorPoints: 10
     attackInterval: 1
-    attackDamage: 20
+    attackDamage: 30
     attackOverrides:
     - unitAttributes: 2
       overrideDamage: 50
+    unitStrategy: 3
   - unitType: 2
     attributes: 00000000
     healthPoints: 100
@@ -42,6 +44,9 @@ MonoBehaviour:
     attackOverrides:
     - unitAttributes: 1
       overrideDamage: 40
+    - unitAttributes: 0
+      overrideDamage: 40
+    unitStrategy: 2
   - unitType: 3
     attributes: 02000000
     healthPoints: 200
@@ -53,6 +58,7 @@ MonoBehaviour:
       overrideDamage: 70
     - unitAttributes: 2
       overrideDamage: 100
+    unitStrategy: 3
   - unitType: 4
     attributes: 0200000001000000
     healthPoints: 300
@@ -62,5 +68,6 @@ MonoBehaviour:
     attackOverrides:
     - unitAttributes: 2
       overrideDamage: 80
+    unitStrategy: 0
   firstArmy: 00000000000000000200000004000000
   secondArmy: 0100000001000000010000000300000004000000

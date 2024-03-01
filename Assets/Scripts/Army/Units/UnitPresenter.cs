@@ -7,9 +7,14 @@ namespace AFSInterview.Army
         [SerializeField]
         private Unit unit;
 
-        public void SetUnit(Unit unit)
+        public void SetUnit(Unit unit, bool isInArmy1)
         {
-            this.unit = new Unit(unit.UnitType, unit.Attributes, unit.HealthPoints, unit.ArmorPoints, unit.AttackInterval, unit.AttackDamage, unit.AttackDamageOverrides);
+            this.unit = new Unit(unit.UnitType, unit.Attributes, unit.HealthPoints, unit.ArmorPoints, unit.AttackInterval, unit.AttackDamage, unit.AttackDamageOverrides, unit.UnitStrategyEnum, isInArmy1);
+        }
+
+        public void SetStrategyUnit(IUnitStrategy strategy)
+        {
+            unit.SetStrategy(strategy);
         }
 
         public Unit GetUnit()

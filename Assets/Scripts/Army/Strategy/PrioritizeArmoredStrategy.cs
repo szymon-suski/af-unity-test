@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace AFSInterview.Army
 {
-    public class PrioritizeArmoredStrategy : UnitStrategy
+    public class PrioritizeArmoredStrategy : IUnitStrategy
     {
         public UnitPresenter GetUnitToAttack(ArmyUnits enemyArmy)
         {
-            var enemy = enemyArmy.Army.Find(e => e.GetUnit().Attributes.Any(a => a == UnitAttributes.Armored));
+            var enemy = enemyArmy.Army.Find(e => e.GetUnit().Attributes.Any(a => a == UnitAttributesEnum.Armored));
 
             if (enemy == null)
             {

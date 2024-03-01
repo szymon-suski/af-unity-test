@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace AFSInterview.Army
 {
-    public class DefaultStrategy : UnitStrategy
+    public class DefaultStrategy : IUnitStrategy
     {
         public UnitPresenter GetUnitToAttack(ArmyUnits enemyArmy)
         {

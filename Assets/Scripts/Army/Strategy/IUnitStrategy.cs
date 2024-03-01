@@ -1,6 +1,6 @@
 namespace AFSInterview.Army
 {
-    public interface UnitStrategy
+    public interface IUnitStrategy
     {
         public UnitPresenter GetUnitToAttack(ArmyUnits enemyArmy);
     }

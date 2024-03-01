@@ -1,16 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace AFSInterview.Army
 {
     using AFSInterview.GameMode;
+    using System.Collections;
+    using System.Collections.Generic;
+    using TMPro;
+    using UnityEngine;
 
     public class CombatManager : GameMode
     {
+        [Header("Settings")]
         [SerializeField]
-        private UnitsSO unitsSO;
+        private float delayBetweenAttacks = 3f;
 
+        [Header("References")]
         [SerializeField]
         private ArmyUnits army1;
 
@@ -21,112 +23,121 @@ namespace AFSInterview.Army
         private CreatorUnits creatorUnits;
 
         [SerializeField]
-        private float delayBetweenAttacks = 3f;
+        private TextMeshProUGUI battleText;
 
-        private bool gameStarted = false;
+        [SerializeField]
+        private GameObject changeGameModeButton;
+
+        [Header("Scriptable")]
+        [SerializeField]
+        private UnitsSO unitsSO;
+
         private bool army1Turn;
-        private Coroutine battelCoroutine;
+        private List<UnitPresenter> turnOrder = new List<UnitPresenter>();
 
         public override void DisableMode()
         {
+            battleText.text = string.Empty;
+            battleText.gameObject.SetActive(false);
 
+            army1.ClearArmy();
+            army2.ClearArmy();
+            army1.gameObject.SetActive(false);
+            army2.gameObject.SetActive(false);
         }
 
         public override void EnableMode()
         {
-            if (gameStarted)
-            {
-                // Return
-                return;
-            }
+            changeGameModeButton.SetActive(false);
+            battleText.text = string.Empty;
+            battleText.gameObject.SetActive(true);
+            army1.gameObject.SetActive(true);
+            army2.gameObject.SetActive(true);
 
             PrepareBatteField();
         }
 
         private void PrepareBatteField()
         {
-            army1.CreateArmy(unitsSO.FirstArmy);
-            army2.CreateArmy(unitsSO.SecondArmy);
+            army1.CreateArmy(unitsSO.FirstArmy, true);
+            army2.CreateArmy(unitsSO.SecondArmy, false);
 
-            // Randomize who starts
-            army1Turn = Random.Range(0, 100) >= 50;
+            turnOrder.AddRange(army1.Army);
+            turnOrder.AddRange(army2.Army);
 
-            battelCoroutine = StartCoroutine(Battle());
+            ShuffleOrder(turnOrder);
+
+            StartCoroutine(Battle());
+        }
+
+        private void ShuffleOrder(List<UnitPresenter> list)
+        {
+            for (int i = list.Count - 1; i > 0; i--)
+            {
+                int randomIndex = Random.Range(0, i + 1);
+
+                // Swap elements
+                var temp = list[i];
+                list[i] = list[randomIndex];
+                list[randomIndex] = temp;
+            }
         }
 
         private IEnumerator Battle()
         {
-            if (army1Turn)
+            while(!army1.IsDefeated() && !army2.IsDefeated()) 
             {
-                Attack(army1, army2);
+                foreach (var unitPre in turnOrder)
+                {
+                    if (army1.IsDefeated() || army2.IsDefeated()) break;
+                    var unit = unitPre.GetUnit();
+                    if (unit.CanAttack())
+                    {
+                        var enemyArmy = unit.IsInArmy1 ? army2 : army1;
+                        Attack(unitPre, enemyArmy);
+
+                        yield return new WaitForSeconds(delayBetweenAttacks);
+
+                        army1.UpdateAttackIntervalInArmy();
+                        army2.UpdateAttackIntervalInArmy();
+                    }
+                }
+
+                turnOrder.RemoveAll(x => x == null);
+            }
+            FinishGame(army1.IsDefeated() ? army2 : army1);
+        }
+
+        private void Attack(UnitPresenter attackUnitPresenter, ArmyUnits targetArmy)
+        {
+            var attackUnit = attackUnitPresenter.GetUnit();
+
+            var targetUnitPresenter = attackUnit.Strategy.GetUnitToAttack(targetArmy);
+            var targetUnit = targetUnitPresenter.GetUnit();
+
+            var attackDamage = attackUnit.GetAttackDamage(targetUnit);
+            var damageDeal = Mathf.Max(1, attackDamage - targetUnitPresenter.GetUnit().ArmorPoints);
+
+            Debug.Log($"Unit of type <b>{attackUnit.UnitType}</b> attacks unit of army {targetArmy.name} of type <b>{targetUnit.UnitType}</b> and deal <b>{damageDeal} pts</b> damage. Health left {targetUnit.HealthPoints}.");
+
+            if (targetUnit.ReceiveDamage(damageDeal))
+            {
+                targetArmy.RemoveUnit(targetUnitPresenter);
+                targetUnitPresenter.DestroyUnit();
+                battleText.text = $"Unit of type <b>{attackUnit.UnitType}</b> attacks unit of army {targetArmy.name} of type <b>{targetUnit.UnitType}</b> and deal <b>{damageDeal} pts</b> damage. No health left! Unit dies!";
+                Debug.Log($"Unit from {targetArmy.name} of type {targetUnit.UnitType} dies");
             }
             else
             {
-                Attack(army2, army1);
+                battleText.text = $"Unit of type <b>{attackUnit.UnitType}</b> attacks unit of army {targetArmy.name} of type <b>{targetUnit.UnitType}</b> and deal <b>{damageDeal} pts</b> damage. Health left {targetUnit.HealthPoints}.";
             }
-
-            yield return new WaitForSeconds(delayBetweenAttacks);
-
-            army1.UpdateAttackIntervalInArmy();
-            army2.UpdateAttackIntervalInArmy();
-            army1Turn = !army1Turn;
-
-            if (army1.IsDefeated())
-            {
-                Debug.Log($"{army2.name} WON!");
-                yield break;
-            }
-            else if (army2.IsDefeated())
-            {
-                Debug.Log($"{army1.name} WON!");
-                yield break;
-            }
-
-            battelCoroutine = StartCoroutine(Battle());
         }
 
-        private void Attack(ArmyUnits attackArmy, ArmyUnits targetArmy)
+        private void FinishGame(ArmyUnits winner)
         {
-            var attackUnitPresenter = attackArmy.GetAttackUnit();
-            if (attackUnitPresenter == null)
-            {
-                Debug.Log($"Any of units aren't available in {attackArmy.name}");
-                return;
-            }
-
-            var attackUnit = attackUnitPresenter.GetUnit();
-            var bestOpponent = attackUnit.GetBestUnitAttributeToAttack();
-
-            var strategyDefault = new DefaultStrategy();
-            UnitPresenter targetUnit = strategyDefault.GetUnitToAttack(targetArmy);
-
-            switch (bestOpponent)
-            {
-                case UnitAttributes.Light:
-                    var strategyLight = new PrioritizeLightStrategy();
-                    targetUnit = strategyLight.GetUnitToAttack(targetArmy);
-                    break;
-                case UnitAttributes.Armored:
-                    var strategyArmored = new PrioritizeArmoredStrategy();
-                    targetUnit = strategyArmored.GetUnitToAttack(targetArmy);
-                    break;
-                case UnitAttributes.Mechanical:
-                    var strategyMechanical = new PrioritizeMechanicalStrategy();
-                    targetUnit = strategyMechanical.GetUnitToAttack(targetArmy);
-                    break;
-            }
-
-            var attackDamage = attackUnit.GetAttackDamage(targetUnit.GetUnit());
-            var damageDeal = Mathf.Max(1, attackDamage - targetUnit.GetUnit().ArmorPoints);
-
-            Debug.Log($"Unit from {attackArmy.name} of type {attackUnit.UnitType} attacks unit of army {targetArmy.name} of type {targetUnit.GetUnit().UnitType} and deal {damageDeal} pts damage");
-
-            if (targetUnit.GetUnit().ReceiveDamage(damageDeal))
-            {
-                targetArmy.RemoveUnit(targetUnit);
-                targetUnit.DestroyUnit();
-                Debug.Log($"Unit from {targetArmy.name} of type {targetUnit.GetUnit().UnitType} dies");
-            }
+            Debug.Log($"{winner.name} WON!");
+            battleText.text = $"{winner.name} <b>WON</b> THE BATTLE!";
+            changeGameModeButton.SetActive(true);
         }
     }
 }
